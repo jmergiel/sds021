@@ -2,6 +2,14 @@
 
 #include <functional>
 
+/*
+	A simple, generic scoped helper based on the famous Scope Guard idiom.
+	Adapted for modern C++ [auto+lambda] which makes it a lot cleaner and shorter.
+	Apparently there's a C++ proposal which offers something like this and probably
+	is better/faster/safer/..., but I'm kinda used to using my own - at least until
+	the "official" version is in widespread use...
+*/
+
 namespace scoped
 {
 	class OnScopeExit final
