@@ -1,17 +1,16 @@
 #include <cstdio>
 #include <cstdarg>
-#include <cstdint>
-#include <errno.h>
 #include <fcntl.h> 
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
 #include <string>
-#include <ctime>
+
+#ifdef INTERACTIVE
 #include <thread>
-#include <chrono>
-#include <csignal>
-#include <functional>
+#endif
+
+#include "scoped_exit.h"
 
 
 static constexpr int CMD_BYTES = 19;
@@ -21,25 +20,6 @@ static constexpr int CMDID_REPLY = 0xC5;
 
 namespace
 {
-	class OnScopeExit final
-	{
-		std::function<void()>	m_func;
-		bool					m_call = true;
-	public:
-		explicit OnScopeExit(std::function<void()> foo) : m_func(std::move(foo)) {}
-		~OnScopeExit()
-		{
-			if(m_call && m_func) m_func();
-		}
-		void Dismiss() noexcept { m_call = false; }
-	};
-
-	template <typename T>
-	OnScopeExit make_scoped(T&& foo)
-	{
-		return OnScopeExit(std::forward<T>(foo));
-	}
-
 	void error_message(const char* msg, ...)
 	{
 		va_list va;
