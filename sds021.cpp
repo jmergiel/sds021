@@ -28,7 +28,7 @@ namespace
 		va_start(va, msg);
 		char buff[512]{};
 		sprintf(buff, "ERROR [%s]\n", msg);
-		vfprintf(stdout, buff, va);
+		vfprintf(stderr, buff, va);
 		va_end(va);
 	}
 
@@ -237,6 +237,7 @@ void ReadThread(int fd, int pip = -1)
 				dump(buf, sizeof(buf));
 				parse(buf, false);
 			}
+			fflush(stdout);	//< force output now
 		}
 		else
 		{
